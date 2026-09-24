@@ -80,6 +80,8 @@ export class CrDetailComponent implements OnInit {
 		}
 
 		this.submitting = true;
+		this.updateRejectControlState();
+
 		this.actionError = undefined;
 
 		try {
@@ -93,6 +95,7 @@ export class CrDetailComponent implements OnInit {
 			this.actionError = (err as Error).message;
 		} finally {
 			this.submitting = false;
+			this.updateRejectControlState();
 		}
 	}
 
@@ -108,6 +111,7 @@ export class CrDetailComponent implements OnInit {
 		}
 
 		this.submitting = true;
+		this.updateRejectControlState();
 		this.actionError = undefined;
 
 		try {
@@ -122,6 +126,15 @@ export class CrDetailComponent implements OnInit {
 			this.actionError = (err as Error).message;
 		} finally {
 			this.submitting = false;
+			this.updateRejectControlState();
+		}
+	}
+
+	private updateRejectControlState(): void {
+		if (this.submitting) {
+			this.rejectControl.disable();
+		} else {
+			this.rejectControl.enable();
 		}
 	}
 }
