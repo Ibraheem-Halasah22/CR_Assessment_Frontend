@@ -55,6 +55,7 @@
 		<!-- Actions -->
 		<section class="cr-actions">
 			<p *ngIf="actionError" class="cr-actions__error" role="alert">{{ actionError }}</p>
+			<p *ngIf="submitting" class="cr-actions__submitting" role="status">Submitting...</p>
 
 			<button
 				type="button"
