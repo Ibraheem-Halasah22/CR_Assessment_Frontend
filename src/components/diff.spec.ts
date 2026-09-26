@@ -39,4 +39,29 @@ describe('computeDiff', () => {
 		expect(rows.find((row) => row.sku === 'SKU-A')?.kind).toBe('unchanged');
 		expect(rows.find((row) => row.sku === 'SKU-B')?.kind).toBe('unchanged');
 	});
+
+	it('handles a large diff containing added, removed, changed, and unchanged items', () => {
+		const baseline = [
+			{ sku: 'A', description: 'A', quantity: 10, unitPrice: 100 },
+			{ sku: 'B', description: 'B', quantity: 20, unitPrice: 200 },
+			{ sku: 'C', description: 'C', quantity: 30, unitPrice: 300 },
+			{ sku: 'D', description: 'D', quantity: 40, unitPrice: 400 },
+		];
+
+		const proposed = [
+			{ sku: 'A', description: 'A', quantity: 10, unitPrice: 100 }, // unchanged
+			{ sku: 'B', description: 'B', quantity: 25, unitPrice: 200 }, // changed
+			{ sku: 'D', description: 'D', quantity: 40, unitPrice: 450 }, // changed
+			{ sku: 'E', description: 'E', quantity: 50, unitPrice: 500 }, // added
+		];
+
+		const result = computeDiff(baseline, proposed);
+
+		expect(result).toHaveLength(5);
+		expect(result.find((row) => row.sku === 'A')?.kind).toBe('unchanged');
+		expect(result.find((row) => row.sku === 'B')?.kind).toBe('changed');
+		expect(result.find((row) => row.sku === 'C')?.kind).toBe('removed');
+		expect(result.find((row) => row.sku === 'D')?.kind).toBe('changed');
+		expect(result.find((row) => row.sku === 'E')?.kind).toBe('added');
+	});
 });
